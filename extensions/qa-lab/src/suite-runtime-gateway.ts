@@ -1,6 +1,7 @@
 import { setTimeout as sleep } from "node:timers/promises";
 import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
 import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import { isRecord as isPlainObject } from "openclaw/plugin-sdk/string-coerce-runtime";
 import type { QaConfigSnapshot, QaSuiteRuntimeEnv } from "./suite-runtime-types.js";
 
 async function fetchJson<T>(url: string): Promise<T> {
@@ -128,10 +129,6 @@ function getGatewayRetryAfterMs(error: unknown) {
     }
   }
   return null;
-}
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function isObjectWithStringId(value: unknown): value is { id: string } & Record<string, unknown> {
