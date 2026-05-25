@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { OpenClawConfig } from "../config/types.js";
+import { normalizeSortedUniqueStringEntries } from "../shared/string-normalization.js";
 import type { PluginCompatCode } from "./compat/registry.js";
 import { normalizePluginsConfig, resolveEffectiveEnableState } from "./config-state.js";
 import { isPluginEnabledByDefaultForPlatform } from "./default-enablement.js";
@@ -21,22 +22,13 @@ import type { PluginPackageChannel } from "./manifest.js";
 import { isPathInsideWithRealpath, safeRealpathSync } from "./path-safety.js";
 import { hasKind } from "./slots.js";
 
-function sortUnique(values: readonly string[] | undefined): readonly string[] {
-  if (!values || values.length === 0) {
-    return [];
-  }
-  return Array.from(new Set(values.map((value) => value.trim()).filter(Boolean))).toSorted(
-    (left, right) => left.localeCompare(right),
-  );
-}
-
 function buildStartupInfo(record: PluginManifestRecord): InstalledPluginStartupInfo {
   return {
     sidecar: record.activation?.onStartup === true,
     memory: hasKind(record.kind, "memory"),
     deferConfiguredChannelFullLoadUntilAfterListen:
       record.startupDeferConfiguredChannelFullLoadUntilAfterListen === true,
-    agentHarnesses: sortUnique([
+    agentHarnesses: normalizeSortedUniqueStringEntries([
       ...(record.activation?.onAgentHarnesses ?? []),
       ...(record.cliBackends ?? []),
     ]),
@@ -74,7 +66,7 @@ export function collectPluginManifestCompatCodes(
   if (record.activation?.onCapabilities?.length) {
     codes.push("activation-capability-hint");
   }
-  return sortUnique(codes) as readonly PluginCompatCode[];
+  return normalizeSortedUniqueStringEntries(codes) as readonly PluginCompatCode[];
 }
 
 function resolvePackageJsonPath(candidate: PluginCandidate | undefined): string | undefined {
