@@ -5,6 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { resolveOAuthDir, resolveStateDir } from "../../config/paths.js";
 import { loadJsonFile } from "../../infra/json-file.js";
+import { isRecord } from "../../shared/record-coerce.js";
 
 const LEGACY_OAUTH_REF_SOURCE = "openclaw-credentials";
 const LEGACY_OAUTH_REF_PROVIDER = "openai-codex";
@@ -34,10 +35,6 @@ type LegacyOAuthEncryptedPayload = {
   tag: string;
   ciphertext: string;
 };
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return !!value && typeof value === "object" && !Array.isArray(value);
-}
 
 function readNonEmptyString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value : undefined;
