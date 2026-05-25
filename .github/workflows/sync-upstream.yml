@@ -1,0 +1,35 @@
+# Daily sync from openclaw/openclaw upstream → mxvberger/openclaw fork.
+# Runs every day at 03:30 UTC. Opens a PR if upstream is ahead.
+
+name: Sync from upstream
+
+on:
+  schedule:
+    - cron: "30 3 * * *"
+  workflow_dispatch:  # allow manual trigger from Actions tab
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+        with:
+          upstream_sync_repo: openclaw/openclaw
+          upstream_sync_branch: main
+          target_sync_branch: main
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify if behind
+        if: failure()
+        run: echo "::warning::Upstream sync failed - manual merge may be required."
