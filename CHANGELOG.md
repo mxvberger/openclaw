@@ -15,6 +15,7 @@ Docs: https://docs.openclaw.ai
 ### Fixes
 
 - Gateway: avoid sending duplicate tool-event frames to Control UI connections that are subscribed by both run and session.
+- Agents/OpenAI-compatible: stop ModelStudio-compatible chat requests before sending system/tool-only payloads that have no usable user or assistant turn. (#86177)
 - Discord/OpenAI voice: accept leading fuzzy wake-name transcripts such as "Monty" or "Moti" for a Molty agent while keeping ambient speech gated.
 - Media understanding: convert HEIC and HEIF images to JPEG before image description providers run so iPhone photos work in direct and configured image-description flows. (#86037)
 - Discord/OpenAI voice: rotate Realtime sessions at provider max duration without logging the expected session-expiry event as an error.
