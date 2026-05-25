@@ -7,6 +7,7 @@ import {
   type HealthFinding,
 } from "openclaw/plugin-sdk/health";
 import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
+import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
 import {
   collectPolicyEvidence,
   createPolicyAttestation,
@@ -3042,8 +3043,4 @@ function policyPathSetting(ctx: HealthCheckContext): string {
 function policyDisplayName(ctx: HealthCheckContext): string {
   const configured = policyPathSetting(ctx);
   return isAbsolute(configured) ? basename(configured) : configured;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
