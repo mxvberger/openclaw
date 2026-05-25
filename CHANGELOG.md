@@ -14,6 +14,7 @@ Docs: https://docs.openclaw.ai
 
 ### Fixes
 
+- QQBot: derive the outbound reply watchdog from configured agent and provider timeouts so slow local model replies are not cut off at five minutes. Fixes #85267. (#85271) Thanks @SymbolStar.
 - Discord/OpenAI voice: accept leading fuzzy wake-name transcripts such as "Monty" or "Moti" for a Molty agent while keeping ambient speech gated.
 - Media understanding: convert HEIC and HEIF images to JPEG before image description providers run so iPhone photos work in direct and configured image-description flows. (#86037)
 - Discord/OpenAI voice: rotate Realtime sessions at provider max duration without logging the expected session-expiry event as an error.
